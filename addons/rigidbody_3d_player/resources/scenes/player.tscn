@@ -1,0 +1,81 @@
+[gd_scene load_steps=11 format=3 uid="uid://bqxh6ancdmoxd"]
+
+[ext_resource type="Script" uid="uid://cvrv46kye502a" path="res://addons/rigidbody_3d_player/scripts/player/player.gd" id="1_i8wya"]
+[ext_resource type="Script" uid="uid://binoo8hyy8hxf" path="res://addons/rigidbody_3d_player/scripts/player/eyes.gd" id="4_h5h42"]
+[ext_resource type="Script" uid="uid://cxbpph0x0glqw" path="res://addons/rigidbody_3d_player/scripts/player/states/idle.gd" id="4_i8wya"]
+[ext_resource type="Script" uid="uid://bofs2e8mdx4vv" path="res://addons/nbfsm/scripts/components/state_machine.gd" id="5_buavc"]
+[ext_resource type="Script" uid="uid://dtgva038anldb" path="res://addons/rigidbody_3d_player/scripts/player/states/walk.gd" id="5_pu5xs"]
+[ext_resource type="Script" uid="uid://b6k88l6l8aiua" path="res://addons/rigidbody_3d_player/scripts/player/states/fall.gd" id="8_7gpmo"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_4bag7"]
+friction = 0.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
+radius = 0.225
+height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wwmvc"]
+radius = 0.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_4bag7"]
+radius = 0.2
+
+[node name="Player" type="RigidBody3D" node_paths=PackedStringArray("collider", "floor_check", "ceiling_check", "neck")]
+mass = 80.0
+physics_material_override = SubResource("PhysicsMaterial_4bag7")
+lock_rotation = true
+custom_integrator = true
+continuous_cd = true
+script = ExtResource("1_i8wya")
+walk_speed = 3.0
+jump_height = 0.75
+max_slope_angle = 45.0
+floor_accel_rate = 15.0
+floor_decel_rate = 10.0
+air_accel_rate = 3.0
+air_decel_rate = 0.1
+collider = NodePath("Collider")
+floor_check = NodePath("FloorCheck")
+ceiling_check = NodePath("CeilingCheck")
+neck = NodePath("Neck")
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_sh265")
+debug_color = Color(0, 1, 0.27451, 0.419608)
+
+[node name="CeilingCheck" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+enabled = false
+shape = SubResource("SphereShape3D_wwmvc")
+target_position = Vector3(0, 1.17, 0)
+
+[node name="FloorCheck" type="ShapeCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("SphereShape3D_4bag7")
+target_position = Vector3(0, -0.27, 0)
+
+[node name="Neck" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+
+[node name="Eyes" type="Camera3D" parent="Neck" node_paths=PackedStringArray("neck")]
+script = ExtResource("4_h5h42")
+sensitivity = 3.0
+neck = NodePath("..")
+
+[node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("5_buavc")
+initial_state = NodePath("Idle")
+metadata/_custom_type_script = "uid://bofs2e8mdx4vv"
+
+[node name="Idle" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("4_i8wya")
+metadata/_custom_type_script = "uid://cxbpph0x0glqw"
+
+[node name="Walk" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("5_pu5xs")
+metadata/_custom_type_script = "uid://dtgva038anldb"
+
+[node name="Fall" type="Node" parent="PlayerStateMachine"]
+script = ExtResource("8_7gpmo")
+metadata/_custom_type_script = "uid://b6k88l6l8aiua"
