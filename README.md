@@ -13,7 +13,7 @@ After ensuring that you have satisfied all the necessary dependencies, download 
 
 ## Usage
 
-You can either instantiate or create an inherited scene of the Player scene that is provided by the plugin, depending on whether or not you want to extend it's functionality. The player's behaviour is state machine based (hence the dependency). The state machine based player implementation is mostly inspired by GDQuest's example from his [node based finite state machine tutorial](https://www.gdquest.com/tutorial/godot/design-patterns/finite-state-machine/). How exactly to build up from this basic implementation is entirely up to you.
+You can either instantiate or create an inherited scene of the player scene that is provided by the plugin, depending on whether or not you want to extend it's functionality. The player's behaviour is state machine based (hence the dependency). The state machine based player implementation is mostly inspired by GDQuest's example from his [node based finite state machine tutorial](https://www.gdquest.com/tutorial/godot/design-patterns/finite-state-machine/). How exactly to build up from this basic implementation is entirely up to you.
 
 ## License
 
