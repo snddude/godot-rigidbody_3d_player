@@ -42,14 +42,14 @@ func _enter_tree() -> void:
 	dialog.dialog_autowrap = true
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 
-	var text: String = ("The following Actions are required by the Debug Console Plugin to function"
-			+ " properly and have therefore been added to the Input Map of your Project:\n")
+	var text: String = ("The following Actions are required by the RigidBody3D Player plugin to function"
+			+ " properly and have therefore been added to the Input Map of your project:\n")
 
 	for action in added_actions:
 		text += action
 
 	text += ("\nThese Actions will not appear in the Input Map tab until another Action is added or"
-			+ " the Project is reloaded.")
+			+ " the project is reloaded.")
 
 	dialog.set_text(text)
 
