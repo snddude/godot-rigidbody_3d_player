@@ -49,5 +49,19 @@ func _process(_delta: float) -> void:
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	for index: int in state.get_contact_count():
+		if state.get_contact_collider_object(index) is RigidBody3D:
+			continue
+
+		var contact_normal: Vector3 = state.get_contact_local_normal(index)
+
+		if not contact_normal.dot(Vector3.UP) == 0.0:
+			continue
+
+		if not contact_normal.dot(-velocity.normalized()) >= 0.0:
+			continue
+
+		velocity = velocity.slide(contact_normal)
+
 	var impulse: Vector3 = (velocity - state.linear_velocity) * mass
 	state.apply_central_impulse(impulse)

@@ -42,8 +42,9 @@ func _enter_tree() -> void:
 	dialog.dialog_autowrap = true
 	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
 
-	var text: String = ("The following Actions are required by the RigidBody3D Player plugin to function"
-			+ " properly and have therefore been added to the Input Map of your project:\n")
+	var text: String = ("The following Actions are required by the RigidBody3D Player plugin to "
+			+ " function properly and have therefore been added to the Input Map of your "
+			+ " project:\n")
 
 	for action in added_actions:
 		text += action
@@ -62,7 +63,3 @@ func _enter_tree() -> void:
 
 	dialog.popup()
 	dialog.grab_focus()
-
-
-func _exit_tree() -> void:
-	pass
