@@ -30,6 +30,7 @@ continuous_cd = true
 contact_monitor = true
 max_contacts_reported = 32
 script = ExtResource("1_i8wya")
+sensitivity = 3.0
 walk_speed = 3.0
 jump_height = 0.75
 max_slope_angle = 45.0
@@ -61,13 +62,12 @@ target_position = Vector3(0, -0.27, 0)
 [node name="Neck" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
 
-[node name="Eyes" type="Camera3D" parent="Neck" node_paths=PackedStringArray("neck")]
+[node name="Eyes" type="Camera3D" parent="Neck" node_paths=PackedStringArray("player")]
 physics_interpolation_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
 top_level = true
 script = ExtResource("4_h5h42")
-sensitivity = 3.0
-neck = NodePath("..")
+player = NodePath("../..")
 
 [node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("5_buavc")

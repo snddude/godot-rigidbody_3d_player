@@ -1,6 +1,8 @@
 class_name Player
 extends RigidBody3D
 
+@export_group("Camera")
+@export var sensitivity: float
 @export_group("Movement")
 @export var walk_speed: float
 @export var jump_height: float

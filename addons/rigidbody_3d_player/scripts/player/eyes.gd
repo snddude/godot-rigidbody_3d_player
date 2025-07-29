@@ -1,9 +1,8 @@
 class_name Eyes
 extends Camera3D
 
-@export var sensitivity: float
 @export_group("Nodes")
-@export var neck: Node3D
+@export var player: Player
 
 
 func _ready() -> void:
@@ -12,11 +11,11 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		neck.rotation_degrees.y -= deg_to_rad(event.relative.x * sensitivity)
-		rotation_degrees.x -= deg_to_rad(event.relative.y * sensitivity)
+		player.neck.rotation_degrees.y -= deg_to_rad(event.relative.x * player.sensitivity)
+		rotation_degrees.x -= deg_to_rad(event.relative.y * player.sensitivity)
 		rotation_degrees.x = clamp(rotation_degrees.x, -90.0, 90.0)
 
 
 func _process(delta: float) -> void:
-	global_position = neck.get_global_transform_interpolated().origin
-	global_rotation.y = neck.global_rotation.y
+	global_position = player.neck.get_global_transform_interpolated().origin
+	global_rotation.y = player.neck.global_rotation.y
