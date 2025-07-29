@@ -62,6 +62,9 @@ target_position = Vector3(0, -0.27, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
 
 [node name="Eyes" type="Camera3D" parent="Neck" node_paths=PackedStringArray("neck")]
+physics_interpolation_mode = 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+top_level = true
 script = ExtResource("4_h5h42")
 sensitivity = 3.0
 neck = NodePath("..")
