@@ -6,7 +6,7 @@ func enter() -> void:
 	player.ceiling_check.enabled = true
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var direction: Vector3 = (player.neck.global_basis * player.wish_dir).normalized()
 	var rate: float = player.air_accel_rate if direction.length() > 0.0 else player.air_decel_rate
 

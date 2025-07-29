@@ -6,7 +6,7 @@ func enter() -> void:
 	player.ceiling_check.enabled = false
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	var direction: Vector3 = (player.neck.global_basis * player.wish_dir).normalized()
 
 	player.velocity.x = lerp(player.velocity.x, 

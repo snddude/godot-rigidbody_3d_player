@@ -6,7 +6,7 @@ func enter() -> void:
 	player.ceiling_check.enabled = false
 
 
-func update(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	player.velocity = lerp(player.velocity, Vector3.ZERO, delta * player.floor_decel_rate)
 
 	if not player.is_on_floor:
