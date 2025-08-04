@@ -1,0 +1,384 @@
+[gd_scene load_steps=13 format=3 uid="uid://6hwm7prsuhss"]
+
+[ext_resource type="PackedScene" uid="uid://bqxh6ancdmoxd" path="res://addons/rigidbody_3d_player/resources/scenes/player.tscn" id="3_fqogv"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fqogv"]
+content_margin_left = 8.0
+content_margin_right = 8.0
+bg_color = Color(0, 0, 0, 0.498039)
+
+[sub_resource type="Theme" id="Theme_fqogv"]
+Label/font_sizes/font_size = 12
+Label/styles/normal = SubResource("StyleBoxFlat_fqogv")
+
+[sub_resource type="GDScript" id="GDScript_fqogv"]
+resource_name = "debug"
+script/source = "extends VBoxContainer
+
+@export_group(\"Nodes\")
+@export var position_label: Label
+@export var floor_angle_label: Label
+@export var is_on_floor_label: Label
+@export var is_on_slope_label: Label
+@export var velocity_label: Label
+@export var state_label: Label
+@export var fps_label: Label
+@export var player: Player
+@export var state_machine: StateMachine
+
+
+func _ready() -> void:
+	DebugConsole.add_console_command(\"playerdebug\", toggle, TYPE_NIL)
+
+
+func _process(_delta: float) -> void:
+	if !visible:
+		return
+
+	position_label.text = \"Position:  %.2f  %.2f  %.2f\"%[
+			player.global_position.x,
+			player.global_position.y,
+			player.global_position.z
+			]
+	floor_angle_label.text = \"Floor angle:  %.2f\"%player.floor_angle
+	is_on_slope_label.text = \"Is on slope:  %s\"%str(player.is_on_slope)
+	is_on_floor_label.text = \"Is on floor:  %s\"%str(player.is_on_floor)
+	velocity_label.text = \"Velocity:  %.2f  %.2f  %.2f  |  %.2f\"%[
+			player.velocity.x, 
+			player.velocity.y, 
+			player.velocity.z, 
+			player.velocity.length()
+			]
+	state_label.text = \"State:  %s\"%state_machine.current_state.name
+	fps_label.text = \"%d FPS\"%Engine.get_frames_per_second()
+
+
+func toggle() -> void:
+	visible = !visible
+"
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fj7yv"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_tlwt5"]
+sky_material = SubResource("ProceduralSkyMaterial_fj7yv")
+
+[sub_resource type="Environment" id="Environment_aqk2v"]
+background_mode = 2
+sky = SubResource("Sky_tlwt5")
+tonemap_mode = 2
+ssao_radius = 0.25
+ssao_intensity = 2.5
+glow_blend_mode = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uo2k5"]
+albedo_color = Color(1, 0.498039, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uo2k5"]
+material = SubResource("StandardMaterial3D_uo2k5")
+size = Vector3(0.85, 0.85, 0.85)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fqogv"]
+size = Vector3(0.85, 0.85, 0.85)
+
+[sub_resource type="SphereMesh" id="SphereMesh_uo2k5"]
+material = SubResource("StandardMaterial3D_uo2k5")
+radius = 0.425
+height = 0.85
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_uo2k5"]
+radius = 0.425
+
+[node name="World" type="Node"]
+
+[node name="Debug" type="CanvasLayer" parent="."]
+layer = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Debug" node_paths=PackedStringArray("position_label", "floor_angle_label", "is_on_floor_label", "is_on_slope_label", "velocity_label", "state_label", "fps_label", "player", "state_machine")]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 208.0
+offset_bottom = 76.0
+theme = SubResource("Theme_fqogv")
+theme_override_constants/separation = 0
+script = SubResource("GDScript_fqogv")
+position_label = NodePath("Position")
+floor_angle_label = NodePath("FloorAngle")
+is_on_floor_label = NodePath("IsOnFloor")
+is_on_slope_label = NodePath("IsOnSlope")
+velocity_label = NodePath("Velocity")
+state_label = NodePath("State")
+fps_label = NodePath("FPS")
+player = NodePath("../../Player")
+state_machine = NodePath("../../Player/PlayerStateMachine")
+
+[node name="Position" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Position:  0.00  0.00  0.00  |  0.00"
+
+[node name="FloorAngle" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Floor angle:  0.00"
+
+[node name="IsOnSlope" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Is on slope: false"
+
+[node name="IsOnFloor" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Is on floor: false"
+
+[node name="Velocity" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Velocity:  0.00  0.00  0.00  |  0.00"
+
+[node name="State" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "State: None"
+
+[node name="FPS" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "0000 FPS"
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Crosshair" type="CenterContainer" parent="HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="HUD/Crosshair"]
+custom_minimum_size = Vector2(2, 2)
+layout_mode = 2
+color = Color(1, 1, 1, 0.498039)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_aqk2v")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.776195, 0.00821647, 0.630439, 0.488277, -0.624762, 0.609309, 0.398881, 0.780772, 0.480926, 0, 0, 0)
+light_bake_mode = 1
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("3_fqogv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+use_collision = true
+metadata/_edit_group_ = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+size = Vector3(20, 2, 20)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+operation = 2
+size = Vector3(12, 1, 12)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 2.5, 0)
+size = Vector3(1, 7, 20)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 2.5, 0)
+size = Vector3(1, 7, 20)
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 4.5897e-07, 2.5, 10.5)
+size = Vector3(1, 7, 22)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4.5897e-07, 2.5, -10.5)
+size = Vector3(1, 7, 22)
+
+[node name="CSGBox3D7" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 2.5, 0)
+size = Vector3(2, 5, 2)
+
+[node name="CSGBox3D8" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 8, 3, -8)
+size = Vector3(2, 4, 2)
+
+[node name="CSGBox3D9" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -8, 3, -8)
+size = Vector3(2, 4, 2)
+
+[node name="CSGBox3D10" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 8, 3, 8)
+size = Vector3(2, 4, 2)
+
+[node name="CSGBox3D11" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, -8, 3, 8)
+size = Vector3(2, 4, 2)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 1)
+operation = 2
+polygon = PackedVector2Array(0, 0, 0, 1, 2, 1, 0, 0)
+depth = 2.0
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="CSGCombiner3D"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -6, 0, -1)
+operation = 2
+polygon = PackedVector2Array(0, 0, 0, 1, 2, 1, 0, 0)
+depth = 2.0
+
+[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1, 0, -6)
+operation = 2
+polygon = PackedVector2Array(0, 0, 0, 1, 2, 1, 0, 0)
+depth = 2.0
+
+[node name="CSGPolygon3D4" type="CSGPolygon3D" parent="CSGCombiner3D"]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, -1, 0, 6)
+operation = 2
+polygon = PackedVector2Array(0, 0, 0, 1, 2, 1, 0, 0)
+depth = 2.0
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -8)
+size = Vector3(16, 1, 1)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 8)
+size = Vector3(16, 1, 1)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -8, 3.5, 3.49691e-07)
+size = Vector3(16, 1, 1)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8, 3.5, -3.49691e-07)
+size = Vector3(16, 1, 1)
+
+[node name="CSGBox3D16" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.25, -3.5)
+size = Vector3(1, 0.5, 5)
+
+[node name="CSGBox3D17" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0.25, 3.5)
+size = Vector3(1, 0.5, 5)
+
+[node name="CSGBox3D18" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.25, -3.5)
+size = Vector3(1, 0.5, 5)
+
+[node name="CSGBox3D20" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.25, -5.5)
+size = Vector3(4, 0.5, 1)
+
+[node name="CSGBox3D21" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.25, -5.5)
+size = Vector3(4, 0.5, 1)
+
+[node name="CSGBox3D22" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.25, 5.5)
+size = Vector3(4, 0.5, 1)
+
+[node name="CSGBox3D23" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.25, 5.5)
+size = Vector3(4, 0.5, 1)
+
+[node name="CSGBox3D19" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.25, 3.5)
+size = Vector3(1, 0.5, 5)
+
+[node name="Box01" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.75, 1.5, -6.75)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box01"]
+mesh = SubResource("BoxMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box01"]
+shape = SubResource("BoxShape3D_fqogv")
+
+[node name="Box02" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.75, 1.5, -6.75)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box02"]
+mesh = SubResource("BoxMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box02"]
+shape = SubResource("BoxShape3D_fqogv")
+
+[node name="Box03" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.75, 1.5, 6.75)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box03"]
+mesh = SubResource("BoxMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box03"]
+shape = SubResource("BoxShape3D_fqogv")
+
+[node name="Box04" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.75, 1.5, 6.75)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Box04"]
+mesh = SubResource("BoxMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Box04"]
+shape = SubResource("BoxShape3D_fqogv")
+
+[node name="Ball01" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -3.25)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball01"]
+mesh = SubResource("SphereMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ball01"]
+shape = SubResource("SphereShape3D_uo2k5")
+
+[node name="Ball02" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.75, 0)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball02"]
+mesh = SubResource("SphereMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ball02"]
+shape = SubResource("SphereShape3D_uo2k5")
+
+[node name="Ball03" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 3.25)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball03"]
+mesh = SubResource("SphereMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ball03"]
+shape = SubResource("SphereShape3D_uo2k5")
+
+[node name="Ball04" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.75, 0)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball04"]
+mesh = SubResource("SphereMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ball04"]
+shape = SubResource("SphereShape3D_uo2k5")
+
+[editable path="Player"]
