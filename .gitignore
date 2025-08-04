@@ -15,7 +15,6 @@ data_*/
 mono_crash.*.json
 
 # Custom ignores
-addons/nbfsm
 addons/debug_console
 addons/inspector_tabs
 addons/script-tabs

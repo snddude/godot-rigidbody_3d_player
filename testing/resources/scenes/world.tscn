@@ -27,10 +27,6 @@ script/source = "extends VBoxContainer
 @export var state_machine: StateMachine
 
 
-func _ready() -> void:
-	DebugConsole.add_console_command(\"playerdebug\", toggle, TYPE_NIL)
-
-
 func _process(_delta: float) -> void:
 	if !visible:
 		return
@@ -51,10 +47,6 @@ func _process(_delta: float) -> void:
 			]
 	state_label.text = \"State:  %s\"%state_machine.current_state.name
 	fps_label.text = \"%d FPS\"%Engine.get_frames_per_second()
-
-
-func toggle() -> void:
-	visible = !visible
 "
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fj7yv"]

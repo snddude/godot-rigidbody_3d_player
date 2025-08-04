@@ -15,10 +15,6 @@ run/main_scene="res://testing/resources/scenes/world.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://testing/assets/sprites/icon.svg"
 
-[autoload]
-
-DebugConsole="*res://addons/debug_console/resources/scenes/autoload/debug_console.tscn"
-
 [display]
 
 window/size/viewport_width=1280
@@ -27,7 +23,7 @@ window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/debug_console/plugin.cfg", "res://addons/inspector_tabs/plugin.cfg", "res://addons/nbfsm/plugin.cfg", "res://addons/rigidbody_3d_player/plugin.cfg", "res://addons/script-tabs/plugin.cfg")
+enabled=PackedStringArray("res://addons/inspector_tabs/plugin.cfg", "res://addons/nbfsm/plugin.cfg", "res://addons/rigidbody_3d_player/plugin.cfg", "res://addons/script-tabs/plugin.cfg")
 
 [file_customization]
 
