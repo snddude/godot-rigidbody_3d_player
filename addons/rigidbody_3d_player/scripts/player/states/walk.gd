@@ -11,10 +11,10 @@ func physics_update(delta: float) -> void:
 
 	player.velocity.x = lerp(player.velocity.x, 
 			direction.x * player.walk_speed, 
-			delta * player.floor_accel_rate)
+			1.0 - exp(-player.floor_accel_rate * delta))
 	player.velocity.z = lerp(player.velocity.z, 
 			direction.z * player.walk_speed, 
-			delta * player.floor_accel_rate)
+			1.0 - exp(-player.floor_accel_rate * delta))
 
 	if player.is_on_slope:
 		player.velocity = player.velocity.slide(player.floor_normal)
