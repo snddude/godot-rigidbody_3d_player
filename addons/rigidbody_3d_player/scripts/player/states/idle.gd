@@ -2,10 +2,6 @@ class_name Idle
 extends PlayerState
 
 
-func enter() -> void:
-	player.ceiling_check.enabled = false
-
-
 func physics_update(delta: float) -> void:
 	player.velocity = lerp(player.velocity, 
 			Vector3.ZERO, 

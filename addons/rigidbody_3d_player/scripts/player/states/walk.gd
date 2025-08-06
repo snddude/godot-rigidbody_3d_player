@@ -2,10 +2,6 @@ class_name Walk
 extends PlayerState
 
 
-func enter() -> void:
-	player.ceiling_check.enabled = false
-
-
 func physics_update(delta: float) -> void:
 	var direction: Vector3 = (player.neck.global_basis * player.wish_dir).normalized()
 

@@ -2,10 +2,6 @@ class_name Fall
 extends PlayerState
 
 
-func enter() -> void:
-	player.ceiling_check.enabled = true
-
-
 func physics_update(delta: float) -> void:
 	var direction: Vector3 = (player.neck.global_basis * player.wish_dir).normalized()
 	var rate: float = player.air_accel_rate if direction.length() > 0.0 else player.air_decel_rate
@@ -17,7 +13,7 @@ func physics_update(delta: float) -> void:
 			direction.z * player.walk_speed,
 			1.0 - exp(-rate * delta))
 
-	if player.ceiling_check.is_colliding() and player.velocity.y > 0.0:
+	if player.is_on_ceiling and player.velocity.y > 0.0:
 		player.velocity.y = 0.0
 
 	player.velocity.y -= player.gravity * delta

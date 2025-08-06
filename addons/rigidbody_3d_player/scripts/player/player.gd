@@ -13,12 +13,10 @@ extends RigidBody3D
 @export var air_accel_rate: float
 @export var air_decel_rate: float
 @export_group("Nodes")
-@export var collider: CollisionShape3D
-@export var floor_check: ShapeCast3D
-@export var ceiling_check: ShapeCast3D
 @export var neck: Node3D
 
 var floor_angle: float = 0.0
+var is_on_ceiling: bool = false
 var is_on_slope: bool = false
 var is_on_floor: bool = false
 var wish_dir := Vector3.ZERO
@@ -31,31 +29,29 @@ var floor_normal := Vector3.ZERO
 func _process(_delta: float) -> void:
 	wish_dir = Vector3(Input.get_axis("left", "right"), 0.0, Input.get_axis("forward", "back"))
 
+
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	is_on_ceiling = false
 	is_on_slope = false
 	is_on_floor = false
 
-	var collision_count: int = floor_check.get_collision_count()
+	var contact_count: int = state.get_contact_count()
 	var normal_sum := Vector3.ZERO
 
-	for index: int in collision_count:
-		normal_sum += floor_check.get_collision_normal(index)
+	for index: int in contact_count:
+		var contact_normal: Vector3 = state.get_contact_local_normal(index)
 
-	floor_normal = (normal_sum / collision_count).normalized()
+		is_on_ceiling = contact_normal.dot(Vector3.DOWN) == 1.0
 
-	var normal_dot: float = floor_normal.dot(Vector3.UP)
-	floor_angle = rad_to_deg(acos(normal_dot))
+		var contact_dot: float = contact_normal.dot(Vector3.UP)
 
-	if floor_angle <= max_slope_angle:
-		is_on_slope = normal_dot > 0.0 and normal_dot < 1.0
-		is_on_floor = normal_dot == 1.0 or is_on_slope
+		# Comparing against the actual value of max_slope_angle causes issues with movement on 
+		# slopes that are of this exact angle. Adding a small value to it seems to negate this.
+		if contact_dot > 0.0 and acos(contact_dot) <= deg_to_rad(max_slope_angle + 0.01):
+			normal_sum += contact_normal
 
-
-func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
-	for index: int in state.get_contact_count():
 		if state.get_contact_collider_object(index) is RigidBody3D:
 			continue
-
-		var contact_normal: Vector3 = state.get_contact_local_normal(index)
 
 		if not contact_normal.dot(Vector3.UP) == 0.0:
 			continue
@@ -64,6 +60,19 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			continue
 
 		velocity = velocity.slide(contact_normal)
+
+	floor_normal = normal_sum / contact_count if contact_count > 0 else Vector3.ZERO
+
+	# Normalizing a Vector3.ZERO causes issues. Only normalize floor_normal if
+	# it's a non-zero vector.
+	if floor_normal.length() > 0.0:
+		floor_normal = floor_normal.normalized()
+
+	var normal_dot: float = floor_normal.dot(Vector3.UP)
+	floor_angle = rad_to_deg(acos(normal_dot))
+
+	is_on_slope = normal_dot > 0.0 and normal_dot < 1.0
+	is_on_floor = normal_dot == 1.0 or is_on_slope
 
 	var impulse: Vector3 = (velocity - state.linear_velocity) * mass
 	state.apply_central_impulse(impulse)

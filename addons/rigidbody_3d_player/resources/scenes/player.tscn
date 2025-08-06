@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bqxh6ancdmoxd"]
+[gd_scene load_steps=9 format=3 uid="uid://bqxh6ancdmoxd"]
 
 [ext_resource type="Script" uid="uid://cvrv46kye502a" path="res://addons/rigidbody_3d_player/scripts/player/player.gd" id="1_i8wya"]
 [ext_resource type="Script" uid="uid://binoo8hyy8hxf" path="res://addons/rigidbody_3d_player/scripts/player/eyes.gd" id="4_h5h42"]
@@ -14,13 +14,7 @@ friction = 0.0
 radius = 0.225
 height = 1.8
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_wwmvc"]
-radius = 0.2
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_4bag7"]
-radius = 0.2
-
-[node name="Player" type="RigidBody3D" node_paths=PackedStringArray("collider", "floor_check", "ceiling_check", "neck")]
+[node name="Player" type="RigidBody3D" node_paths=PackedStringArray("neck")]
 mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_4bag7")
 can_sleep = false
@@ -38,26 +32,12 @@ floor_accel_rate = 15.0
 floor_decel_rate = 10.0
 air_accel_rate = 3.0
 air_decel_rate = 0.1
-collider = NodePath("Collider")
-floor_check = NodePath("FloorCheck")
-ceiling_check = NodePath("CeilingCheck")
 neck = NodePath("Neck")
 
 [node name="Collider" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_sh265")
 debug_color = Color(0, 1, 0.27451, 0.419608)
-
-[node name="CeilingCheck" type="ShapeCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-enabled = false
-shape = SubResource("SphereShape3D_wwmvc")
-target_position = Vector3(0, 1.17, 0)
-
-[node name="FloorCheck" type="ShapeCast3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
-shape = SubResource("SphereShape3D_4bag7")
-target_position = Vector3(0, -0.27, 0)
 
 [node name="Neck" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
