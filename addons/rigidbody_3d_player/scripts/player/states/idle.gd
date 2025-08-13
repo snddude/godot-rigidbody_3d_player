@@ -3,9 +3,11 @@ extends PlayerState
 
 
 func physics_update(delta: float) -> void:
-	player.velocity = lerp(player.velocity, 
+	player.velocity = lerp(
+			player.velocity, 
 			Vector3.ZERO, 
-			1.0 - exp(-player.floor_decel_rate * delta))
+			1.0 - exp(-player.floor_decel_rate * delta)
+	)
 
 	if not player.is_on_floor:
 		finished.emit(FALL)

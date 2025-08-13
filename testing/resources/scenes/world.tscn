@@ -19,7 +19,7 @@ script/source = "extends VBoxContainer
 @export_group(\"Nodes\")
 @export var position_label: Label
 @export var floor_normal_label: Label
-@export var floor_angle_label: Label
+@export var ceiling_angle_label: Label
 @export var is_on_ceiling_label: Label
 @export var is_on_floor_label: Label
 @export var is_on_slope_label: Label
@@ -47,12 +47,16 @@ func _process(_delta: float) -> void:
 			player.global_position.y,
 			player.global_position.z
 			]
+	ceiling_angle_label.text = \"Ceiling normal:  %.2f  %.2f  %.2f\"%[
+			player.ceiling_normal.x,
+			player.ceiling_normal.y,
+			player.ceiling_normal.z,
+			]
 	floor_normal_label.text = \"Floor normal:  %.2f  %.2f  %.2f\"%[
 			player.floor_normal.x,
 			player.floor_normal.y,
-			player.floor_normal.z
+			player.floor_normal.z,
 			]
-	floor_angle_label.text = \"Floor angle:  %.2f\"%player.floor_angle
 	is_on_ceiling_label.text = \"Is on ceiling:  %s\"%str(player.is_on_ceiling)
 	is_on_floor_label.text = \"Is on floor:  %s\"%str(player.is_on_floor)
 	is_on_slope_label.text = \"Is on slope:  %s\"%str(player.is_on_slope)
@@ -104,7 +108,7 @@ radius = 0.425
 [node name="Debug" type="CanvasLayer" parent="."]
 layer = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Debug" node_paths=PackedStringArray("position_label", "floor_normal_label", "floor_angle_label", "is_on_ceiling_label", "is_on_floor_label", "is_on_slope_label", "velocity_label", "state_label", "fps_label", "player", "state_machine")]
+[node name="VBoxContainer" type="VBoxContainer" parent="Debug" node_paths=PackedStringArray("position_label", "floor_normal_label", "ceiling_angle_label", "is_on_ceiling_label", "is_on_floor_label", "is_on_slope_label", "velocity_label", "state_label", "fps_label", "player", "state_machine")]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 208.0
@@ -114,7 +118,7 @@ theme_override_constants/separation = 0
 script = SubResource("GDScript_fqogv")
 position_label = NodePath("Position")
 floor_normal_label = NodePath("FloorNormal")
-floor_angle_label = NodePath("FloorAngle")
+ceiling_angle_label = NodePath("CeilingNormal")
 is_on_ceiling_label = NodePath("IsOnCeiling")
 is_on_floor_label = NodePath("IsOnFloor")
 is_on_slope_label = NodePath("IsOnSlope")
@@ -129,15 +133,15 @@ layout_mode = 2
 size_flags_horizontal = 0
 text = "Position:  0.00  0.00  0.00  |  0.00"
 
+[node name="CeilingNormal" type="Label" parent="Debug/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Ceiling normal:  0.00  0.00  0.00  |  0.00"
+
 [node name="FloorNormal" type="Label" parent="Debug/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Floor normal:  0.00  0.00  0.00  |  0.00"
-
-[node name="FloorAngle" type="Label" parent="Debug/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-text = "Floor angle:  0.00"
 
 [node name="IsOnCeiling" type="Label" parent="Debug/VBoxContainer"]
 layout_mode = 2
@@ -263,7 +267,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 1.875, 2.75)
 size = Vector3(3, 0.75, 3)
 
 [node name="CSGBox3D10" type="CSGBox3D" parent="Geometry/CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 2.625, 5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 2.625, 5.75)
 size = Vector3(3, 0.75, 3)
 
 [node name="CSGBox3D11" type="CSGBox3D" parent="Geometry/CSGCombiner3D"]

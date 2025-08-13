@@ -5,12 +5,16 @@ extends PlayerState
 func physics_update(delta: float) -> void:
 	var direction: Vector3 = (player.neck.global_basis * player.wish_dir).normalized()
 
-	player.velocity.x = lerp(player.velocity.x, 
+	player.velocity.x = lerp(
+			player.velocity.x, 
 			direction.x * player.walk_speed, 
-			1.0 - exp(-player.floor_accel_rate * delta))
-	player.velocity.z = lerp(player.velocity.z, 
+			1.0 - exp(-player.floor_accel_rate * delta)
+	)
+	player.velocity.z = lerp(
+			player.velocity.z, 
 			direction.z * player.walk_speed, 
-			1.0 - exp(-player.floor_accel_rate * delta))
+			1.0 - exp(-player.floor_accel_rate * delta)
+	)
 
 	if player.is_on_slope:
 		player.velocity = player.velocity.slide(player.floor_normal)
