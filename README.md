@@ -15,7 +15,8 @@ After installing them, download the [latest release](https://github.com/snddude/
 
 The plugin comes with a "player.tscn" file located in the "addons/rigidbody_3d_player/resources/scenes/" folder. You can use it as is if you don't need any extra functionality.
 
-**Note:** to see this scene file in the "Instantiate Child Scene..." window, you must check the "Addons" checkbutton, located in it's bottom right corner.
+> [!NOTE]
+> To see this scene file in the "Instantiate Child Scene..." window, you must check the "Addons" checkbutton, located in it's bottom right corner.
 
 ## License
 
