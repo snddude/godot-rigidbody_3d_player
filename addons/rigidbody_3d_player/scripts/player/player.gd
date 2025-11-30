@@ -90,5 +90,4 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	is_on_slope = normal_dot > 0.0 and normal_dot < 1.0
 	is_on_floor = normal_dot == 1.0 or is_on_slope
 
-	var impulse: Vector3 = (velocity - state.linear_velocity) * mass
-	state.apply_central_impulse(impulse)
+	state.set_linear_velocity(velocity)
