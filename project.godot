@@ -12,7 +12,7 @@ config_version=5
 
 config/name="godot-rigidbody_3d_player"
 run/main_scene="res://testing/resources/scenes/world.tscn"
-config/features=PackedStringArray("4.4", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://testing/assets/sprites/icon.svg"
 
 [display]
@@ -23,7 +23,7 @@ window/vsync/vsync_mode=0
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/nbfsm/plugin.cfg", "res://addons/rigidbody_3d_player/plugin.cfg")
+enabled=PackedStringArray("res://addons/inspector_tabs/plugin.cfg", "res://addons/nbfsm/plugin.cfg", "res://addons/rigidbody_3d_player/plugin.cfg")
 
 [file_customization]
 
