@@ -76,11 +76,11 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if floor_contact_count > 0:
 		floor_normal = floor_normal_sum / floor_contact_count
 
-	# Normalizing a Vector3.ZERO causes issues. Only normalize if a non-zero vector.
-	if ceiling_normal.length() > 0.0:
+	# Normalizing a vector that's near Vector3.ZERO may produce incorrect results.
+	if not is_equal_approx(ceiling_normal.length(), 0.0):
 		ceiling_normal = ceiling_normal.normalized()
 
-	if floor_normal.length() > 0.0:
+	if not is_equal_approx(floor_normal.length(), 0.0):
 		floor_normal = floor_normal.normalized()
 
 	is_on_ceiling = ceiling_normal != Vector3.ZERO
