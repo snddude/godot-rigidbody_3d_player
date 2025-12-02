@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://6hwm7prsuhss"]
+[gd_scene load_steps=19 format=3 uid="uid://6hwm7prsuhss"]
 
 [ext_resource type="PackedScene" uid="uid://cktvcjtghu4s6" path="res://testing/assets/models/angle_tester.glb" id="2_uo2k5"]
 [ext_resource type="PackedScene" uid="uid://bqxh6ancdmoxd" path="res://addons/rigidbody_3d_player/resources/scenes/player.tscn" id="3_fqogv"]
@@ -61,10 +61,10 @@ func _process(_delta: float) -> void:
 	is_on_floor_label.text = \"Is on floor:  %s\"%str(player.is_on_floor)
 	is_on_slope_label.text = \"Is on slope:  %s\"%str(player.is_on_slope)
 	velocity_label.text = \"Velocity:  %.2f  %.2f  %.2f  |  %.2f\"%[
-			player.velocity.x, 
-			player.velocity.y, 
-			player.velocity.z, 
-			player.velocity.length()
+			player.linear_velocity.x, 
+			player.linear_velocity.y, 
+			player.linear_velocity.z, 
+			player.linear_velocity.length()
 			]
 	state_label.text = \"State:  %s\"%state_machine.current_state.name
 	fps_label.text = \"%d FPS\"%Engine.get_frames_per_second()
@@ -102,6 +102,50 @@ height = 0.85
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_uo2k5"]
 radius = 0.425
+
+[sub_resource type="BoxMesh" id="BoxMesh_fqogv"]
+size = Vector3(4, 0.5, 4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fqogv"]
+size = Vector3(4, 0.5, 4)
+
+[sub_resource type="Animation" id="Animation_fqogv"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, -4)]
+}
+
+[sub_resource type="Animation" id="Animation_uo2k5"]
+resource_name = "hustle"
+length = 8.5
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.5666666, 3.0666666, 5.5666666, 8.066667),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, -4), Vector3(0, 4, -4), Vector3(11.75, 5.5, -4), Vector3(11.75, 5.5, 5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fqogv"]
+_data = {
+&"RESET": SubResource("Animation_fqogv"),
+&"hustle": SubResource("Animation_uo2k5")
+}
 
 [node name="World" type="Node"]
 
@@ -324,6 +368,17 @@ mesh = SubResource("BoxMesh_uo2k5")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/Box03"]
 shape = SubResource("BoxShape3D_uo2k5")
 
+[node name="Box04" type="RigidBody3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1, -4)
+mass = 30.0
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Props/Box04"]
+mesh = SubResource("BoxMesh_uo2k5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Props/Box04"]
+shape = SubResource("BoxShape3D_uo2k5")
+
 [node name="Ball01" type="RigidBody3D" parent="Props"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 7.5)
 mass = 30.0
@@ -356,5 +411,23 @@ mesh = SubResource("SphereMesh_uo2k5")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Props/Ball03"]
 shape = SubResource("SphereShape3D_uo2k5")
+
+[node name="MovingPlatforms" type="Node" parent="."]
+
+[node name="Hustler" type="AnimatableBody3D" parent="MovingPlatforms"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+metadata/_edit_group_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MovingPlatforms/Hustler"]
+mesh = SubResource("BoxMesh_fqogv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MovingPlatforms/Hustler"]
+shape = SubResource("BoxShape3D_fqogv")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MovingPlatforms/Hustler"]
+libraries = {
+&"": SubResource("AnimationLibrary_fqogv")
+}
+autoplay = "hustle"
 
 [editable path="Player"]
