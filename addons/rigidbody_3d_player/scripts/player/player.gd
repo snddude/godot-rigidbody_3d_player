@@ -20,6 +20,7 @@ var is_on_slope: bool = false
 var is_on_floor: bool = false
 var wish_dir := Vector3.ZERO
 var velocity := Vector3.ZERO
+var last_contact_velocity := Vector3.ZERO
 var ceiling_normal := Vector3.ZERO
 var floor_normal := Vector3.ZERO
 
@@ -40,6 +41,8 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	var contact_count: int = state.get_contact_count()
 	var floor_contact_count: int = 0
 	var ceiling_contact_count: int = 0
+	var last_floor_index: int = 0
+	var last_floor_was_rigidbody: bool = false
 	var floor_normal_sum := Vector3.ZERO
 	var ceiling_normal_sum := Vector3.ZERO
 
@@ -58,8 +61,10 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		if contact_dot_up > 0.0 and acos(contact_dot_up) <= deg_to_rad(max_slope_angle + 0.01):
 			floor_normal_sum += contact_normal
 			floor_contact_count += 1
+			last_floor_index = index
 
 		if state.get_contact_collider_object(index) is RigidBody3D:
+			last_floor_was_rigidbody = true
 			continue
 
 		if not contact_normal.dot(Vector3.UP) == 0.0:
@@ -90,4 +95,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	is_on_slope = normal_dot > 0.0 and normal_dot < 1.0
 	is_on_floor = normal_dot == 1.0 or is_on_slope
 
-	state.set_linear_velocity(velocity)
+	if is_on_floor and not last_floor_was_rigidbody:
+		last_contact_velocity = state.get_contact_collider_velocity_at_position(last_floor_index)
+
+	state.set_linear_velocity(velocity + last_contact_velocity)
