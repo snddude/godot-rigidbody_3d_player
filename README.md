@@ -9,7 +9,7 @@ A first person character controller based on the RigidBody3D node and a node-bas
 The following plugins need to be present in your project:
 - [godot-nbfsm](https://github.com/snddude/godot-nbfsm)
 
-After installing them, download the [latest release](https://github.com/snddude/godot-rigidbody_3d_player/releases/latest) of this plugin, which comes in a zip archive. Extract it into your project's "addons/" folder, then go to Project → Project Settings → Plugins and enable "RigidBody3D Player".
+After installing them, download the [latest release](https://github.com/snddude/godot-rigidbody_3d_player/releases/latest) of this plugin, which comes in a ZIP archive. Extract it into your project's "addons/" folder, then go to Project → Project Settings → Plugins and enable "RigidBody3D Player".
 
 ## Usage
 
