@@ -15,7 +15,7 @@ func _ready() -> void:
 
 	current_state = initial_state
 
-	if owner:
+	if owner != null:
 		await owner.ready
 
 	current_state.enter()
@@ -35,7 +35,7 @@ func _physics_process(delta: float) -> void:
 
 func change_state(new_state_path: String) -> void:
 	if not has_node(new_state_path):
-		printerr('No such state "%s" in state machine "%s"'%[new_state_path, name])
+		push_error('No such state "%s" in state machine "%s"'%[new_state_path, name])
 		return
 
 	current_state.exit()
