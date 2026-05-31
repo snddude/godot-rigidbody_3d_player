@@ -14,6 +14,7 @@ extends RigidBody3D
 @export var air_decel_rate: float
 @export_group("Nodes")
 @export var neck: Node3D
+@export var head: Node3D
 
 var is_on_ceiling: bool = false
 var is_on_slope: bool = false
@@ -22,6 +23,17 @@ var wish_dir := Vector3.ZERO
 var velocity := Vector3.ZERO
 var ceiling_normal := Vector3.ZERO
 var floor_normal := Vector3.ZERO
+
+
+func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+		neck.rotation_degrees.y -= deg_to_rad(event.relative.x * sensitivity)
+		head.rotation_degrees.x -= deg_to_rad(event.relative.y * sensitivity)
+		head.rotation_degrees.x = clamp(head.rotation_degrees.x, -90.0, 90.0)
 
 
 func _process(_delta: float) -> void:

@@ -5,17 +5,6 @@ extends Camera3D
 @export var player: Player
 
 
-func _ready() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-
-
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		player.neck.rotation_degrees.y -= deg_to_rad(event.relative.x * player.sensitivity)
-		rotation_degrees.x -= deg_to_rad(event.relative.y * player.sensitivity)
-		rotation_degrees.x = clamp(rotation_degrees.x, -90.0, 90.0)
-
-
 func _process(delta: float) -> void:
-	global_position = player.neck.get_global_transform_interpolated().origin
-	global_rotation.y = player.neck.global_rotation.y
+	global_position = player.head.get_global_transform_interpolated().origin
+	global_rotation = player.head.global_rotation
