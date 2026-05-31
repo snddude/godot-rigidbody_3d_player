@@ -14,5 +14,6 @@ func physics_update(delta: float) -> void:
 	elif player.wish_dir.length() > 0.0:
 		finished.emit(WALK)
 	elif Input.is_action_just_pressed("jump"):
-		player.velocity.y = sqrt(2.0 * -player.get_gravity().y * player.jump_height)
+		player.position.y += 0.1 # This is probably terrible, but it helps when jumping on slopes.
+		player.velocity.y = sqrt(2.0 * -player.get_gravity().y * (player.jump_height - 0.1))
 		finished.emit(FALL)

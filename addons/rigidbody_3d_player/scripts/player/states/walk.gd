@@ -16,18 +16,15 @@ func physics_update(delta: float) -> void:
 			1.0 - exp(-player.floor_accel_rate * delta)
 	)
 
-	if player.is_on_slope:
-		player.velocity = player.velocity.slide(player.floor_normal)
-
-		if player.velocity.length() > player.walk_speed:
-			player.velocity = player.velocity.normalized() * player.walk_speed
-	else:
-		player.velocity.y = 0.0
+	# If the player is on a slope they can move quicker than desired.
+	if player.velocity.length() > player.walk_speed:
+		player.velocity = player.velocity.normalized() * player.walk_speed
 
 	if player.wish_dir.length() == 0.0:
 		finished.emit(IDLE)
 	elif not player.is_on_floor:
 		finished.emit(FALL)
 	elif Input.is_action_just_pressed("jump"):
-		player.velocity.y = sqrt(2.0 * -player.get_gravity().y * player.jump_height)
+		player.position.y += 0.1 # This is probably terrible, but it helps when jumping on slopes.
+		player.velocity.y = sqrt(2.0 * -player.get_gravity().y * (player.jump_height - 0.1))
 		finished.emit(FALL)

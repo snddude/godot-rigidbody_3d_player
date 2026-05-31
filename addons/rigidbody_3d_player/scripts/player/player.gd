@@ -64,7 +64,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			ceiling_contact_count += 1
 
 		# Comparing against the actual value of max_slope_angle causes issues with movement on 
-		# slopes that are of that exact angle. Adding a small value to it seems to negate this.
+		# slopes that are of that exact angle. Adding a small value to it seems to negate them.
 		if contact_dot_up > 0.0 and acos(contact_dot_up) <= deg_to_rad(max_slope_angle + 0.01):
 			floor_normal_sum += contact_normal
 			floor_contact_count += 1
@@ -78,6 +78,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		if not contact_normal.dot(-velocity.normalized()) >= 0.0:
 			continue
 
+		# Slide along angled walls.
 		velocity = velocity.slide(contact_normal)
 
 	if ceiling_contact_count > 0:
@@ -95,9 +96,17 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	is_on_ceiling = ceiling_normal != Vector3.ZERO
 
+	# Slide along ceilings.
+	if is_on_ceiling and velocity.y > 0.0:
+		velocity = velocity.slide(ceiling_normal)
+
 	var normal_dot: float = floor_normal.dot(Vector3.UP)
 
 	is_on_slope = normal_dot > 0.0 and normal_dot < 1.0
 	is_on_floor = normal_dot == 1.0 or is_on_slope
+
+	# Move along slopes.
+	if is_on_slope:
+		velocity = velocity.slide(floor_normal)
 
 	state.set_linear_velocity(velocity)
