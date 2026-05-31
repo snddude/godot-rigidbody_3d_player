@@ -17,6 +17,7 @@ height = 1.8
 [node name="Player" type="RigidBody3D" unique_id=1875158480 node_paths=PackedStringArray("neck")]
 mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_4bag7")
+gravity_scale = 1.837
 can_sleep = false
 lock_rotation = true
 custom_integrator = true

@@ -29,5 +29,5 @@ func physics_update(delta: float) -> void:
 	elif not player.is_on_floor:
 		finished.emit(FALL)
 	elif Input.is_action_just_pressed("jump"):
-		player.velocity.y = sqrt(2.0 * player.gravity * player.jump_height)
+		player.velocity.y = sqrt(2.0 * -player.get_gravity().y * player.jump_height)
 		finished.emit(FALL)

@@ -23,8 +23,6 @@ var velocity := Vector3.ZERO
 var ceiling_normal := Vector3.ZERO
 var floor_normal := Vector3.ZERO
 
-@onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-
 
 func _process(_delta: float) -> void:
 	wish_dir = Vector3(Input.get_axis("left", "right"), 0.0, Input.get_axis("forward", "back"))

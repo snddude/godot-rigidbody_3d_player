@@ -20,7 +20,7 @@ func physics_update(delta: float) -> void:
 	if player.is_on_ceiling and player.velocity.y > 0.0:
 		player.velocity = player.velocity.slide(player.ceiling_normal)
 
-	player.velocity.y -= player.gravity * delta
+	player.velocity.y += player.get_gravity().y * delta
 
 	if player.is_on_floor and player.velocity.y < 0.0:
 		finished.emit(IDLE)
