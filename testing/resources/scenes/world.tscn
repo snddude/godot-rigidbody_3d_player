@@ -172,20 +172,6 @@ layout_mode = 2
 size_flags_horizontal = 0
 text = "0000 FPS"
 
-[node name="HUD" type="CanvasLayer" parent="." unique_id=203630038]
-
-[node name="Crosshair" type="CenterContainer" parent="HUD" unique_id=1733080877]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="HUD/Crosshair" unique_id=314617210]
-custom_minimum_size = Vector2(2, 2)
-layout_mode = 2
-color = Color(1, 1, 1, 0.498039)
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=907987926]
 environment = SubResource("Environment_aqk2v")
 
