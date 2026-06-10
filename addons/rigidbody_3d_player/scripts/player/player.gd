@@ -110,3 +110,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		velocity = velocity.slide(floor_normal)
 
 	state.set_linear_velocity(velocity)
+
+
+func get_jump_velocity() -> float:
+	return sqrt(2.0 * -get_gravity().y * (jump_height - 0.1))
