@@ -1,6 +1,9 @@
 class_name Player
 extends RigidBody3D
 
+const MIN_ROT_X: float = -90.0
+const MAX_ROT_X: float = 90.0
+
 @export_group("Camera")
 @export var sensitivity: float
 @export_group("Movement")
@@ -33,7 +36,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		neck.rotation_degrees.y -= deg_to_rad(event.relative.x * sensitivity)
 		head.rotation_degrees.x -= deg_to_rad(event.relative.y * sensitivity)
-		head.rotation_degrees.x = clamp(head.rotation_degrees.x, -90.0, 90.0)
+		head.rotation_degrees.x = clamp(head.rotation_degrees.x, MIN_ROT_X, MAX_ROT_X)
 
 
 func _process(_delta: float) -> void:
