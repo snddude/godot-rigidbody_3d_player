@@ -64,12 +64,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
 
 [node name="Head" type="Node3D" parent="Neck" unique_id=1146192005]
 
-[node name="Eyes" type="Camera3D" parent="Neck/Head" unique_id=1756693571 node_paths=PackedStringArray("player")]
+[node name="Eyes" type="Camera3D" parent="Neck/Head" unique_id=1756693571 node_paths=PackedStringArray("player_head")]
 physics_interpolation_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
 top_level = true
 script = ExtResource("4_h5h42")
-player = NodePath("../../..")
+player_head = NodePath("..")
 
 [node name="PlayerStateMachine" type="Node" parent="." unique_id=2046842637 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("5_buavc")
