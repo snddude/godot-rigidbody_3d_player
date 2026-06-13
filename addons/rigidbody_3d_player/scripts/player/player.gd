@@ -22,6 +22,7 @@ const MAX_ROT_X: float = 90.0
 var is_on_ceiling: bool = false
 var is_on_slope: bool = false
 var is_on_floor: bool = false
+var experimental: bool = false
 var wish_dir := Vector3.ZERO
 var velocity := Vector3.ZERO
 var ceiling_normal := Vector3.ZERO
@@ -37,6 +38,9 @@ func _input(event: InputEvent) -> void:
 		neck.rotation_degrees.y -= deg_to_rad(event.relative.x * sensitivity)
 		head.rotation_degrees.x -= deg_to_rad(event.relative.y * sensitivity)
 		head.rotation_degrees.x = clamp(head.rotation_degrees.x, MIN_ROT_X, MAX_ROT_X)
+
+	if event.is_action_pressed("experimental"):
+		experimental = not experimental
 
 
 func _process(_delta: float) -> void:
@@ -82,7 +86,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 			continue
 
 		# Slide along angled walls.
-		velocity = velocity.slide(contact_normal)
+		var slid_velocity: Vector3 = velocity.slide(contact_normal)
+		velocity.x = slid_velocity.x
+		velocity.z = slid_velocity.z
 
 	if ceiling_contact_count > 0:
 		ceiling_normal = ceiling_normal_sum / ceiling_contact_count
@@ -110,7 +116,17 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	# Move along slopes.
 	if is_on_slope:
-		velocity = velocity.slide(floor_normal)
+		if experimental:
+			var slid_velocity: Vector3 = velocity.slide(floor_normal)
+			velocity.y = slid_velocity.y
+
+			if velocity.y > 0.0:
+				velocity.y = 0.0
+			else:
+				velocity.x = slid_velocity.x
+				velocity.z = slid_velocity.z
+		else:
+			velocity = velocity.slide(floor_normal)
 
 	state.set_linear_velocity(velocity)
 

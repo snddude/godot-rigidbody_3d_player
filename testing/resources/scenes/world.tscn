@@ -26,6 +26,7 @@ script/source = "extends VBoxContainer
 @export var velocity_label: Label
 @export var state_label: Label
 @export var fps_label: Label
+@export var experimental: Label
 @export var player: Player
 @export var state_machine: StateMachine
 
@@ -67,6 +68,7 @@ func _process(_delta: float) -> void:
 			player.velocity.length()
 			]
 	state_label.text = \"State:  %s\"%state_machine.current_state.name
+	experimental.text = \"Experimental: %s\"%str(player.experimental)
 	fps_label.text = \"%d FPS\"%Engine.get_frames_per_second()
 "
 
@@ -107,7 +109,7 @@ radius = 0.425
 [node name="Debug" type="CanvasLayer" parent="." unique_id=814969641]
 layer = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Debug" unique_id=2064910438 node_paths=PackedStringArray("position_label", "floor_normal_label", "ceiling_angle_label", "is_on_ceiling_label", "is_on_floor_label", "is_on_slope_label", "velocity_label", "state_label", "fps_label", "player", "state_machine")]
+[node name="VBoxContainer" type="VBoxContainer" parent="Debug" unique_id=2064910438 node_paths=PackedStringArray("position_label", "floor_normal_label", "ceiling_angle_label", "is_on_ceiling_label", "is_on_floor_label", "is_on_slope_label", "velocity_label", "state_label", "fps_label", "experimental", "player", "state_machine")]
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 208.0
@@ -124,6 +126,7 @@ is_on_slope_label = NodePath("IsOnSlope")
 velocity_label = NodePath("Velocity")
 state_label = NodePath("State")
 fps_label = NodePath("FPS")
+experimental = NodePath("Experimental")
 player = NodePath("../../Player")
 state_machine = NodePath("../../Player/PlayerStateMachine")
 
@@ -166,6 +169,11 @@ text = "Velocity:  0.00  0.00  0.00  |  0.00"
 layout_mode = 2
 size_flags_horizontal = 0
 text = "State: None"
+
+[node name="Experimental" type="Label" parent="Debug/VBoxContainer" unique_id=830634402]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Experimental: False"
 
 [node name="FPS" type="Label" parent="Debug/VBoxContainer" unique_id=1566541757]
 layout_mode = 2
