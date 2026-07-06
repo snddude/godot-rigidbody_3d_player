@@ -1,3 +1,4 @@
+@icon("res://addons/nbfsm/assets/sprites/icons/state_machine.svg")
 class_name StateMachine
 extends Node
 
@@ -21,21 +22,29 @@ func _ready() -> void:
 	current_state.enter()
 
 
-func _input(event: InputEvent) -> void:
+func input_update(event: InputEvent) -> void:
 	current_state.input_update(event)
 
 
-func _process(delta: float) -> void:
+func unhandled_input_update(event: InputEvent) -> void:
+	current_state.unhandled_input_update(event)
+
+
+func update(delta: float) -> void:
 	current_state.update(delta)
 
 
-func _physics_process(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	current_state.physics_update(delta)
+
+
+func integrate_forces_update(state: PhysicsDirectBodyState3D) -> void:
+	current_state.intergrate_forces_update(state)
 
 
 func change_state(new_state_path: String) -> void:
 	if not has_node(new_state_path):
-		push_error('No such state "%s" in state machine "%s"'%[new_state_path, name])
+		push_error("StateMachine %s missing %s state" % [name, new_state_path])
 		return
 
 	current_state.exit()
