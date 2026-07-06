@@ -15,7 +15,7 @@ friction = 0.0
 radius = 0.225
 height = 1.8
 
-[node name="Player" type="RigidBody3D" unique_id=1875158480 node_paths=PackedStringArray("neck", "head")]
+[node name="Player" type="RigidBody3D" unique_id=1875158480 node_paths=PackedStringArray("state_machine", "neck", "head")]
 mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_4bag7")
 gravity_scale = 1.837
@@ -34,6 +34,7 @@ floor_accel_rate = 15.0
 floor_decel_rate = 10.0
 air_accel_rate = 3.0
 air_decel_rate = 0.1
+state_machine = NodePath("PlayerStateMachine")
 neck = NodePath("Neck")
 head = NodePath("Neck/Head")
 
