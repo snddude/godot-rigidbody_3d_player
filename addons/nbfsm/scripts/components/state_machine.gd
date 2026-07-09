@@ -1,15 +1,25 @@
+@tool
 @icon("res://addons/nbfsm/assets/sprites/icons/state_machine.svg")
 class_name StateMachine
 extends Node
 
 signal state_changed(new_state_path: String)
 
-@export var initial_state: State
+@export var initial_state: State:
+	set(value):
+		initial_state = value
+
+		if Engine.is_editor_hint():
+			update_configuration_warnings()
+
 
 var current_state: State = null
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		update_configuration_warnings()
+
 	for child in get_children():
 		if child is State:
 			child.finished.connect(change_state)
@@ -20,6 +30,13 @@ func _ready() -> void:
 		await owner.ready
 
 	current_state.enter()
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	if initial_state == null:
+		return ["StateMachine needs a reference to an initial State. Assign one in the inspector"]
+
+	return []
 
 
 func input_update(event: InputEvent) -> void:
