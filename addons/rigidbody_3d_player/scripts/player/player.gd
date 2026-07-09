@@ -15,6 +15,8 @@ const MAX_ROT_X: float = 90.0
 @export var floor_decel_rate: float
 @export var air_accel_rate: float
 @export var air_decel_rate: float
+@export_group("Components")
+@export var state_machine: StateMachine
 @export_group("Nodes")
 @export var neck: Node3D
 @export var head: Node3D
@@ -39,8 +41,12 @@ func _input(event: InputEvent) -> void:
 		head.rotation_degrees.x = clamp(head.rotation_degrees.x, MIN_ROT_X, MAX_ROT_X)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	wish_dir = Vector3(Input.get_axis("left", "right"), 0.0, Input.get_axis("forward", "back"))
+
+
+func _physics_process(delta: float) -> void:
+	state_machine.physics_update(delta)
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:

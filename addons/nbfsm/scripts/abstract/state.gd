@@ -1,4 +1,5 @@
 @abstract
+@icon("res://addons/nbfsm/assets/sprites/icons/state.svg")
 class_name State
 extends Node
 
@@ -9,18 +10,23 @@ func enter() -> void:
 	pass
 
 
-@warning_ignore("unused_parameter")
 func input_update(event: InputEvent) -> void:
 	pass
 
 
-@warning_ignore("unused_parameter")
+func unhandled_input_update(event: InputEvent) -> void:
+	pass
+
+
 func update(delta: float) -> void:
 	pass
 
 
-@warning_ignore("unused_parameter")
 func physics_update(delta: float) -> void:
+	pass
+
+
+func intergrate_forces_update(state: PhysicsDirectBodyState3D) -> void:
 	pass
 
 
