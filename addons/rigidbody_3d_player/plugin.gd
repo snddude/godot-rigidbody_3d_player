@@ -1,63 +1,48 @@
 @tool
 extends EditorPlugin
 
-const ACTIONS: Dictionary[String, Array] = {
-	"forward": [KEY_W, "W"],
-	"left": [KEY_A, "A"],
-	"back": [KEY_S, "S"],
-	"right": [KEY_D, "D"],
-	"jump": [KEY_SPACE, "Space"],
+const ACTIONS: Dictionary[String, EditorActionMapper.InputEventType] = {
+	"forward": EditorActionMapper.INPUT_EVENT_TYPE_KEY,
+	"left": EditorActionMapper.INPUT_EVENT_TYPE_KEY,
+	"back": EditorActionMapper.INPUT_EVENT_TYPE_KEY,
+	"right": EditorActionMapper.INPUT_EVENT_TYPE_KEY,
+	"jump": EditorActionMapper.INPUT_EVENT_TYPE_KEY,
+}
+const EVENTS: Dictionary[String, Variant] = {
+	"forward": KEY_W,
+	"left": KEY_A,
+	"back": KEY_S,
+	"right": KEY_D,
+	"jump": KEY_SPACE,
 }
 
 
-func _enter_tree() -> void:
-	var added_actions: Array[String] = []
+func format_actions(actions: Array[String]) -> String:
+	var ret: String = ""
 
-	for action in ACTIONS.keys():
-		var setting: String = "input/" + action
+	for action: String in actions:
+		ret += "  - %s: %s\n" % [action, OS.get_keycode_string(EVENTS[action])]
 
-		if ProjectSettings.has_setting(setting):
-			continue
+	return ret
 
-		var event_key := InputEventKey.new()
-		event_key.physical_keycode = ACTIONS[action][0]
 
-		var input: Dictionary = {
-			"deadzone": 0.2,
-			"events": [event_key],
-		}
+func _enable_plugin() -> void:
+	EditorNotifier.get_confirmation(
+			"The following actions have been added to the input map of your "
+			+ "project:\n%s" % format_actions(EditorActionMapper.bulk_map_actions(ACTIONS, EVENTS))
+			+ "These actions will not appear in the input map tab until "
+			+ "another action is added or the editor is restarted.",
+			"Save & Restart",
+			"OK",
+			EditorInterface.restart_editor.bind(true))
 
-		ProjectSettings.set_setting(setting, input)
-		added_actions.append("    - %s: %s\n"%[action, ACTIONS[action][1]])
 
-	if added_actions.size() < 1:
-		return
-
-	ProjectSettings.save()
-
-	var dialog := ConfirmationDialog.new()
-	dialog.size.x = 460
-	dialog.exclusive = false
-	dialog.unresizable = true
-	dialog.dialog_autowrap = true
-	dialog.initial_position = Window.WINDOW_INITIAL_POSITION_CENTER_MAIN_WINDOW_SCREEN
-
-	var text: String = ("The following Actions have been added to the Input Map of your project:\n")
-
-	for action in added_actions:
-		text += action
-
-	text += ("\nThese Actions will not appear in the Input Map tab until another Action is added or"
-			+ " the project is reloaded.")
-
-	dialog.set_text(text)
-
-	dialog.ok_button_text = "Save and Reload Project"
-	dialog.cancel_button_text = "Reload Project Later"
-
-	dialog.get_ok_button().pressed.connect(func(): EditorInterface.restart_editor(true))
-
-	EditorInterface.get_base_control().add_child(dialog)
-
-	dialog.popup()
-	dialog.grab_focus()
+func _disable_plugin() -> void:
+	EditorNotifier.get_confirmation(
+			"The following actions have been removed from the input map of your "
+			+ "project:\n%s" % format_actions(EditorActionMapper.bulk_unmap_actions(ACTIONS.keys()))
+			+ "These actions will not disappear from the input map tab until "
+			+ "another action is added or the editor is restarted.",
+			"Save & Restart",
+			"OK",
+			EditorInterface.restart_editor.bind(true))
